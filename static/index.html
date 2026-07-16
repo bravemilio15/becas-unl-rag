@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        try {
+            tailwind.config = {
+                darkMode: "class",
+                theme: {
+                    extend: {
+                        "colors": {
+                            "on-error": "#ffffff",
+                            "on-primary": "#ffffff",
+                            "surface-tint": "#bf0811",
+                            "tertiary-fixed": "#d8e2ff",
+                            "tertiary": "#004397",
+                            "surface-container": "#ffe9e6",
+                            "secondary-container": "#a4f795",
+                            "error-container": "#ffdad6",
+                            "on-secondary": "#ffffff",
+                            "surface-container-highest": "#fcdbd7",
+                            "unl-bg-app": "#F4F6F9",
+                            "on-tertiary-fixed-variant": "#004396",
+                            "secondary-fixed": "#a4f795",
+                            "unl-border": "#E2E8F0",
+                            "on-secondary-fixed-variant": "#005308",
+                            "unl-dark": "#211915",
+                            "on-tertiary": "#ffffff",
+                            "background": "#fff8f7",
+                            "primary-container": "#bf0811",
+                            "error": "#ba1a1a",
+                            "surface-container-high": "#ffe2de",
+                            "secondary": "#1e6d1d",
+                            "surface": "#fff8f7",
+                            "on-secondary-container": "#257322",
+                            "primary": "#930008",
+                            "tertiary-fixed-dim": "#aec6ff",
+                            "on-surface-variant": "#5c403c",
+                            "on-primary-fixed": "#410001",
+                            "inverse-primary": "#ffb4aa",
+                            "outline": "#916f6b",
+                            "primary-fixed": "#ffdad5",
+                            "on-tertiary-fixed": "#001a42",
+                            "inverse-surface": "#3f2c29",
+                            "primary-fixed-dim": "#ffb4aa",
+                            "on-background": "#281715",
+                            "unl-red-dark": "#9E060E",
+                            "inverse-on-surface": "#ffedea",
+                            "outline-variant": "#e6bdb8",
+                            "on-primary-fixed-variant": "#930008",
+                            "on-tertiary-container": "#cad9ff",
+                            "on-secondary-fixed": "#002201",
+                            "unl-green-dark": "#326E2D",
+                            "surface-container-lowest": "#ffffff",
+                            "secondary-fixed-dim": "#89da7b",
+                            "surface-dim": "#f3d3cf",
+                            "surface-container-low": "#fff0ee",
+                            "on-surface": "#281715",
+                            "unl-blue": "#004C7B",
+                            "surface-bright": "#fff8f7",
+                            "surface-variant": "#fcdbd7",
+                            "tertiary-container": "#005ac5",
+                            "on-error-container": "#93000a",
+                            "unl-text-secondary": "#64748B",
+                            "on-primary-container": "#ffcdc7",
+                            "status-pill-bg": "#E6F4EA"
+                        },
+                        "borderRadius": {
+                            "DEFAULT": "0.25rem",
+                            "lg": "0.5rem",
+                            "xl": "0.75rem",
+                            "full": "9999px"
+                        },
+                        "spacing": {
+                            "header-height": "72px",
+                            "sidebar-width": "25%",
+                            "gutter": "16px",
+                            "margin-page": "24px"
+                        },
+                        "fontFamily": {
+                            "headline-lg": ["Montserrat"],
+                            "code": ["monospace"],
+                            "headline-md": ["Montserrat"],
+                            "body-sm": ["Montserrat"],
+                            "body-md": ["Montserrat"],
+                            "label-md": ["Montserrat"]
+                        },
+                        "fontSize": {
+                            "headline-lg": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                            "code": ["13px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                            "headline-md": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                            "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                            "body-md": ["15px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                            "label-md": ["13px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }]
+                        }
+                    }
+                }
+            }
+        } catch (_e) {}
+    </script>
+    <style>
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+    <title>Consola RAG - Becas e Incentivos UNL</title>
+</head>
+<body class="bg-unl-bg-app min-h-screen flex flex-col">
+    <!-- Header (Based on Shared Components JSON) -->
+    <header class="bg-surface border-b-4 border-primary flex justify-between items-center h-header-height px-margin-page w-full max-w-full mx-auto shadow-sm sticky top-0 z-50">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-primary rounded flex items-center justify-center text-white font-bold">
+                <i class="fa-solid fa-graduation-cap text-lg"></i>
+            </div>
+            <div>
+                <h1 class="font-headline-lg text-headline-lg text-primary m-0 p-0 leading-tight">UNIVERSIDAD NACIONAL DE LOJA</h1>
+                <p class="font-label-md text-label-md text-unl-text-secondary m-0 p-0">Unidad de Bienestar Universitario</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-4">
+            <!-- Indicador de conexión real -->
+            <span id="global-db-status" class="bg-status-pill-bg text-on-secondary-container px-3 py-1 rounded-full font-label-md text-label-md flex items-center gap-2 border border-secondary-container">
+                <span id="global-db-dot" class="w-2 h-2 rounded-full bg-secondary"></span>
+                <span id="global-db-text">Verificando Estado del Sistema...</span>
+            </span>
+            <!-- Indicador del modelo LLM activo en caliente -->
+            <span id="active-llm-badge" class="bg-blue-50 text-unl-blue px-3 py-1 rounded-full font-label-md text-label-md flex items-center gap-2 border border-blue-200">
+                <i class="fa-solid fa-microchip text-xs"></i>
+                <span>LLM Activo: <strong id="active-llm-name" class="font-bold">Nvidia (meta/llama-3.1-8b-instruct)</strong></span>
+            </span>
+            <!-- Input de Clave API temporal si no se configuró en .env -->
+            <div id="api-key-warning-container" class="hidden flex items-center gap-2 bg-amber-50 border border-amber-200 px-3 py-1 rounded-lg">
+                <i class="fa-solid fa-key text-amber-600 text-xs"></i>
+                <input type="password" id="temp-api-key" placeholder="Configurar GROQ_API_KEY..." class="text-xs border-none bg-transparent focus:ring-0 w-44 p-0">
+            </div>
+        </div>
+    </header>
+
+    <!-- Nav Tabs -->
+    <nav class="bg-surface border-b border-unl-border px-margin-page overflow-x-auto">
+        <ul class="flex gap-8 min-w-max h-14 items-end" id="main-tabs">
+            <li>
+                <button class="tab-btn active text-primary font-bold border-b-2 border-primary pb-3 px-2 flex items-center gap-2" data-target="tab-asistente">
+                    <i class="fa-solid fa-comments"></i> Asistente
+                </button>
+            </li>
+            <li>
+                <button class="tab-btn text-unl-text-secondary font-medium hover:text-primary hover:bg-surface-container-low transition-colors duration-200 pb-3 px-2 flex items-center gap-2 rounded-t-sm" data-target="tab-transparencia">
+                    <i class="fa-solid fa-microscope"></i> Transparencia
+                </button>
+            </li>
+            <li>
+                <button class="tab-btn text-unl-text-secondary font-medium hover:text-primary hover:bg-surface-container-low transition-colors duration-200 pb-3 px-2 flex items-center gap-2 rounded-t-sm" data-target="tab-explorador">
+                    <i class="fa-solid fa-database"></i> Explorador Vectorial
+                </button>
+            </li>
+            <li>
+                <button class="tab-btn text-unl-text-secondary font-medium hover:text-primary hover:bg-surface-container-low transition-colors duration-200 pb-3 px-2 flex items-center gap-2 rounded-t-sm" data-target="tab-gestion">
+                    <i class="fa-solid fa-folder-gear"></i> Gestión y Auditoría
+                </button>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow p-margin-page w-full max-w-7xl mx-auto">
+        
+        <!-- Tab 1: Asistente (75/25 Layout) -->
+        <div id="tab-asistente" class="tab-content active h-[calc(100vh-220px)] min-h-[500px]">
+            <div class="flex flex-col md:flex-row gap-gutter h-full">
+                <!-- Chat Window (75%) -->
+                <div class="md:w-3/4 bg-white border border-unl-border rounded-lg shadow-md flex flex-col overflow-hidden">
+                    <div class="p-4 border-b border-unl-border bg-surface-container-lowest flex items-center justify-between">
+                        <h2 class="font-headline-md text-headline-md text-unl-dark">Asistente Virtual de Becas</h2>
+                        <button onclick="limpiarConversacion()" class="text-unl-text-secondary hover:text-primary transition-colors flex items-center gap-1 text-sm font-medium">
+                            <i class="fa-solid fa-broom"></i> Limpiar Contexto
+                        </button>
+                    </div>
+                    <!-- Contenedor dinámico de mensajes -->
+                    <div class="flex-grow p-6 overflow-y-auto bg-unl-bg-app flex flex-col gap-6" id="chat-messages">
+                        <!-- Assistant Initial Message -->
+                        <div class="flex gap-4 max-w-[85%]">
+                            <div class="w-10 h-10 rounded-full bg-primary flex-shrink-0 flex items-center justify-center text-white">
+                                <i class="fa-solid fa-robot"></i>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl rounded-tl-none border-l-4 border-primary shadow-sm">
+                                <p class="font-body-md text-body-md text-on-surface">Hola. Soy el asistente virtual del Sistema de Becas e Incentivos de la Universidad Nacional de Loja. Puedo ayudarte a consultar requisitos de postulación, montos de becas, causales de pérdida e infracciones basadas en la normativa legal. ¿Qué deseas consultar hoy?</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Input Area -->
+                    <div class="p-4 bg-white border-t border-unl-border">
+                        <form id="chat-form" class="flex gap-2" onsubmit="enviarConsulta(event)">
+                            <input type="text" id="chat-input" class="flex-grow border border-unl-border rounded-lg px-4 py-2 font-body-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Escribe tu consulta sobre becas...">
+                            <button type="submit" class="bg-primary hover:bg-unl-red-dark text-white px-6 py-2 rounded-lg font-label-md transition-colors shadow-sm flex items-center gap-2">
+                                <i class="fa-solid fa-paper-plane"></i> Enviar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <!-- Quick Prompts (25%) -->
+                <div class="md:w-1/4 flex flex-col gap-4">
+                    <h3 class="font-headline-md text-headline-md text-unl-dark">Consultas Frecuentes</h3>
+                    <button onclick="enviarQuickPrompt('¿Cuáles son los requisitos de la Beca Socioeconómica Tipo A y su monto?')" class="bg-white p-4 rounded-lg border border-unl-border hover:shadow-md hover:border-primary transition-all text-left group">
+                        <i class="fa-solid fa-file-contract text-primary mb-2 group-hover:scale-110 transition-transform"></i>
+                        <p class="font-body-sm text-body-sm text-on-surface font-medium">Requisitos Beca Socioeconómica</p>
+                    </button>
+                    <button onclick="enviarQuickPrompt('¿Qué sucede si tengo pérdida de gratuidad o segunda matrícula activa en el SGA?')" class="bg-white p-4 rounded-lg border border-unl-border hover:shadow-md hover:border-primary transition-all text-left group">
+                        <i class="fa-solid fa-list-check text-primary mb-2 group-hover:scale-110 transition-transform"></i>
+                        <p class="font-body-sm text-body-sm text-on-surface font-medium">Pérdida de Gratuidad y Restricciones</p>
+                    </button>
+                    <button onclick="enviarQuickPrompt('¿Cuáles son las causales de pérdida del beneficio de becas según la normativa?')" class="bg-white p-4 rounded-lg border border-unl-border hover:shadow-md hover:border-primary transition-all text-left group">
+                        <i class="fa-solid fa-triangle-exclamation text-primary mb-2 group-hover:scale-110 transition-transform"></i>
+                        <p class="font-body-sm text-body-sm text-on-surface font-medium">Causales de Pérdida de Beca</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Transparencia RAG -->
+        <div id="tab-transparencia" class="tab-content h-full">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <!-- Metrics -->
+                <div class="bg-white p-6 rounded-lg border border-unl-border shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-unl-blue">
+                        <i class="fa-solid fa-stopwatch text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="font-label-md text-unl-text-secondary">Latencia Retriever (ChromaDB)</p>
+                        <p id="metric-retrieval-latency" class="font-headline-md text-unl-dark">0 ms</p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg border border-unl-border shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 bg-purple-50 rounded-full flex items-center justify-center text-purple-700">
+                        <i class="fa-solid fa-microchip text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="font-label-md text-unl-text-secondary">Inferencia LLM (Groq)</p>
+                        <p id="metric-inference-latency" class="font-headline-md text-unl-dark">0 ms</p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg border border-unl-border shadow-sm flex items-center gap-4">
+                    <div class="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center text-secondary">
+                        <i class="fa-solid fa-bullseye text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="font-label-md text-unl-text-secondary">Mejor Score de Distancia</p>
+                        <p id="metric-best-score" class="font-headline-md text-unl-dark">0.00</p>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Context Fragments -->
+                <div class="bg-white rounded-lg border border-unl-border shadow-sm p-6 flex flex-col min-h-[400px]">
+                    <h3 class="font-headline-md text-unl-dark mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group text-primary"></i> Contexto Recuperado (Top K: 4)
+                    </h3>
+                    <div id="transparency-fragments-container" class="space-y-4 flex-grow overflow-y-auto max-h-[450px]">
+                        <p class="text-sm text-unl-text-secondary italic">Realice una consulta en la pestaña de chat para cargar el contexto inyectado.</p>
+                    </div>
+                </div>
+                <!-- Prompt Injection -->
+                <div class="bg-unl-dark rounded-lg shadow-sm p-6 flex flex-col min-h-[400px]">
+                    <h3 class="font-headline-md text-white mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-code text-secondary-container"></i> Prompt Inyectado al LLM (Groq)
+                    </h3>
+                    <div class="bg-black/50 p-4 rounded border border-gray-700 flex-grow overflow-y-auto font-code text-gray-300 text-xs max-h-[450px]">
+                        <pre id="transparency-prompt-text" class="whitespace-pre-wrap">Realice una consulta en la pestaña de chat para visualizar el System Prompt y el contexto formateado final.</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Explorador Vectorial -->
+        <div id="tab-explorador" class="tab-content h-full">
+            <div class="bg-white rounded-lg border border-unl-border shadow-sm p-6 mb-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-headline-md text-unl-dark">Espacio Vectorial: <code>chroma_db</code></h3>
+                    <div class="flex gap-4">
+                        <span class="text-sm text-unl-text-secondary">Modelo: <code>sentence-transformers/all-MiniLM-L6-v2</code></span>
+                        <span class="text-sm text-unl-text-secondary">| Chunks Totales: <strong id="explorador-total-chunks">0</strong></span>
+                    </div>
+                </div>
+                <div class="relative mb-6">
+                    <form onsubmit="ejecutarBusquedaVectorial(event)">
+                        <i class="fa-solid fa-search absolute left-4 top-3 text-unl-text-secondary"></i>
+                        <input type="text" id="vector-search-input" placeholder="Escriba aquí para hacer búsqueda semántica pura en ChromaDB y presione Enter..." class="w-full pl-10 pr-24 py-2 border border-unl-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <button type="submit" class="absolute right-2 top-1.5 bg-primary hover:bg-unl-red-dark text-white text-xs px-3 py-1.5 rounded">Buscar</button>
+                    </form>
+                </div>
+                <div class="overflow-x-auto max-h-[500px]">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b-2 border-unl-border text-unl-dark font-label-md bg-surface-container-low">
+                                <th class="py-3 px-4">Score (Distancia)</th>
+                                <th class="py-3 px-4">Fuente</th>
+                                <th class="py-3 px-4">Contenido (Extracto)</th>
+                                <th class="py-3 px-4">Metadata</th>
+                            </tr>
+                        </thead>
+                        <tbody id="explorador-table-body" class="font-body-sm text-on-surface">
+                            <!-- Inyección dinámica de filas de base vectorial -->
+                            <tr>
+                                <td colspan="4" class="py-4 text-center text-unl-text-secondary italic">Presione el buscador o cargue las estadísticas en la pestaña Gestión.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 4: Gestión y Auditoría -->
+        <div id="tab-gestion" class="tab-content h-full">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Upload Zone -->
+                <div class="lg:col-span-1 flex flex-col gap-6">
+                    <div class="bg-white rounded-lg border border-unl-border shadow-sm p-6">
+                        <h3 class="font-headline-md text-unl-dark mb-4 flex items-center gap-2"><i class="fa-solid fa-file-arrow-up text-primary"></i> Subir Documentos</h3>
+                        <div class="border-2 border-dashed border-unl-text-secondary rounded-lg p-6 text-center hover:bg-slate-50 transition-colors cursor-pointer flex flex-col items-center justify-center min-h-[220px]">
+                            <i class="fa-solid fa-cloud-arrow-up text-3xl text-primary mb-3"></i>
+                            <h4 class="font-body-md font-semibold text-unl-dark mb-1">Cargar base de conocimiento</h4>
+                            <p class="font-body-sm text-xs text-unl-text-secondary mb-4">Formatos soportados: .pdf, .md</p>
+                            <input type="file" id="upload-input" accept=".pdf,.md" class="hidden" onchange="actualizarFileLabel()">
+                            <label for="upload-input" id="upload-label" class="bg-secondary text-white px-4 py-1.5 rounded font-label-md hover:bg-unl-green-dark transition-colors cursor-pointer text-xs">
+                                Seleccionar Archivo
+                            </label>
+                        </div>
+                        <button onclick="subirArchivo()" class="w-full mt-4 bg-primary hover:bg-unl-red-dark text-white py-2 rounded font-label-md transition-colors text-sm font-semibold">
+                            Cargar e Indexar en data/
+                        </button>
+                        <div id="upload-status-message" class="mt-3 text-xs font-medium text-center"></div>
+                    </div>
+
+                    <!-- Métricas del índice -->
+                    <div class="bg-white rounded-lg border border-unl-border shadow-sm p-6">
+                        <h3 class="font-headline-md text-unl-dark mb-4 flex items-center gap-2"><i class="fa-solid fa-server text-primary"></i> Estado del Servidor</h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between border-b border-unl-border pb-2">
+                                <span class="text-unl-text-secondary">Espacio Vectorial:</span>
+                                <span class="font-semibold text-emerald-600">Inicializado</span>
+                            </div>
+                            <div class="flex justify-between border-b border-unl-border pb-2">
+                                <span class="text-unl-text-secondary">Tamaño Disco (Chroma):</span>
+                                <span id="stat-disk-size" class="font-semibold text-unl-dark">0 KB</span>
+                            </div>
+                            <div class="flex justify-between border-b border-unl-border pb-2">
+                                <span class="text-unl-text-secondary">Tamaño Chunk Promedio:</span>
+                                <span id="stat-avg-chunk" class="font-semibold text-unl-dark">0 chars</span>
+                            </div>
+                            <div class="flex justify-between border-b border-unl-border pb-2">
+                                <span class="text-unl-text-secondary">Inferencia Nvidia:</span>
+                                <span id="stat-nvidia-status" class="font-semibold">Cargando...</span>
+                            </div>
+                            <div class="flex justify-between pb-1">
+                                <span class="text-unl-text-secondary">Inferencia Groq:</span>
+                                <span id="stat-groq-status" class="font-semibold">Cargando...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Document List -->
+                <div class="lg:col-span-2 bg-white rounded-lg border border-unl-border shadow-sm p-6 flex flex-col">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-headline-md text-unl-dark flex items-center gap-2"><i class="fa-solid fa-folder-open text-primary"></i> Base de Conocimiento Activa</h3>
+                        <button onclick="reindexarBase()" class="text-secondary hover:text-unl-green-dark hover:bg-emerald-50 transition-colors font-label-md flex items-center gap-2 border border-secondary px-3 py-1 rounded text-xs">
+                            <i class="fa-solid fa-rotate"></i> Re-indexar Todo
+                        </button>
+                    </div>
+                    <div id="reindex-status-message" class="mb-4 text-xs font-semibold text-center hidden"></div>
+                    <div class="overflow-x-auto flex-grow">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b-2 border-unl-border text-unl-dark font-label-md">
+                                    <th class="py-2 px-2">Documento</th>
+                                    <th class="py-2 px-2">Tipo</th>
+                                    <th class="py-2 px-2">Hash SHA-256</th>
+                                    <th class="py-2 px-2">Estado</th>
+                                    <th class="py-2 px-2">Chunks</th>
+                                </tr>
+                            </thead>
+                            <tbody id="documents-table-body" class="font-body-sm text-on-surface">
+                                <!-- Filas indexadas inyectadas dinámicamente -->
+                                <tr>
+                                    <td colspan="5" class="py-4 text-center text-unl-text-secondary italic">Cargando documentos activos...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer (Based on Shared Components JSON) -->
+    <footer class="bg-unl-dark w-full py-4 px-margin-page flex flex-col md:flex-row justify-between items-center mt-auto border-t-4 border-primary">
+        <div class="text-white font-label-md text-label-md flex items-center gap-2">
+            <i class="fa-solid fa-building-columns text-sm"></i>
+            <span>© 2026 Universidad Nacional de Loja - Unidad de Bienestar Universitario. Tesoro de Sabiduría.</span>
+        </div>
+        <div class="flex gap-6 mt-4 md:mt-0">
+            <a href="#" class="text-surface-variant hover:text-primary-fixed-dim transition-colors font-body-sm text-body-sm text-gray-400">Privacidad</a>
+            <a href="#" class="text-surface-variant hover:text-primary-fixed-dim transition-colors font-body-sm text-body-sm text-gray-400">Términos</a>
+            <a href="#" class="text-surface-variant hover:text-primary-fixed-dim transition-colors font-body-sm text-body-sm text-gray-400">Contacto</a>
+        </div>
+    </footer>
+
+    <!-- JS de la aplicación -->
+    <script src="/static/app.js"></script>
+</body>
+</html>

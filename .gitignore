@@ -1,0 +1,30 @@
+# Entornos Virtuales
+venv/
+ENV/
+env/
+.venv/
+
+# Base de Datos Vectorial (ChromaDB)
+chroma_db/
+
+# Variables de Entorno y Claves de API
+.env
+
+# Cachés de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+
+# Archivos de Sistema e IDEs
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Temporales de Agente
+.tempmediaStorage/
+scratch/
+indexed_files_backup.json

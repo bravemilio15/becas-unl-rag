@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+/* Aplicar tipografía a toda la aplicación */
+html, body, [class*="css"], .stMarkdown {
+    font-family: 'Outfit', sans-serif;
+}
+
+/* Contenedor principal del título */
+.hero-container {
+    background: linear-gradient(135deg, #0f1d3a 0%, #172554 50%, #0d9488 100%);
+    padding: 2.5rem;
+    border-radius: 16px;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
+
+.hero-title {
+    color: #ffffff;
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.hero-subtitle {
+    color: #93c5fd;
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin-top: 0.6rem;
+    margin-bottom: 0;
+}
+
+/* Indicadores de estado en el Sidebar */
+.status-container {
+    background-color: rgba(30, 41, 59, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(10px);
+}
+
+.status-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.status-active {
+    background-color: #10b981;
+    box-shadow: 0 0 8px #10b981;
+}
+
+.status-inactive {
+    background-color: #ef4444;
+    box-shadow: 0 0 8px #ef4444;
+}
+
+/* Tarjetas de visualización de contexto (Fuentes) */
+.source-card {
+    background-color: rgba(15, 23, 42, 0.6);
+    border-left: 4px solid #0d9488;
+    border-radius: 0 8px 8px 0;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: #e2e8f0;
+}
+
+.source-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+.badge-md {
+    background-color: #0369a1;
+    color: #ffffff;
+}
+
+.badge-pdf {
+    background-color: #b45309;
+    color: #ffffff;
+}
+
+/* Estilización general del scroll */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #475569;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+}
