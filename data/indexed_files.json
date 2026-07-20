@@ -8,5 +8,10 @@
         "hash": "a0a5aa1d221916fa2b6d0f47fb9a60b28df00169d69aa2d85e9b476441cc8393",
         "source": "Reglamento_PDF",
         "chunks_count": 47
+    },
+    "requisitos_tramite_becas.md": {
+        "hash": "ff53d4ff63c04f29a31bfb1d831da9f5197602b3738e1031bb2751d057b85f4d",
+        "source": "Requisitos_Tramite_MD",
+        "chunks_count": 10
     }
 }

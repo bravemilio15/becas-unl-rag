@@ -12,7 +12,8 @@ Tu deber es responder preguntas basándote en el contexto de normativas y guías
 
 CONTRATO DE RESPUESTA (ESTRICTO):
 1. CASOS DE INTERACCIÓN GENERAL (SALUDOS, AGRADECIMIENTOS Y DESPEDIDAS):
-   - Si el usuario saluda de forma simple (ej. "Hola", "Buenos días", "¿Qué tal?"), responde de manera cortés dándole la bienvenida, preséntate como el Asistente Virtual de Becas e Incentivos de la Universidad Nacional de Loja (UNL) y pregúntale en qué le puedes asistir sobre las normativas de becas. En este caso, no indiques que no dispones de información ni intentes buscar en el reglamento.
+   - Queda terminantemente prohibido saludar, dar la bienvenida o presentarse si la consulta del usuario es una pregunta o solicitud de información específica sobre reglamentos, requisitos o trámites. En esos casos, responde de forma directa, concisa y sin preámbulos ni introducciones de ningún tipo.
+   - Solo debes dar la bienvenida y presentarte como el Asistente Virtual de Becas de la UNL si el mensaje del usuario consiste únicamente en un saludo simple (ej. "Hola", "Buenos días", "¿Qué tal?") y no contiene ninguna pregunta sobre la normativa.
    - Si el usuario agradece o se despide (ej. "Gracias", "Entendido, muchas gracias", "Adiós"), responde con amabilidad, cortesía y disposición a ayudar.
 2. CASOS FUERA DE ÁMBITO (OUT-OF-SCOPE):
    - Si el usuario realiza una pregunta sobre temas completamente ajenos a los reglamentos de becas, incentivos estudiantiles o trámites de la UNL (como recetas de cocina, historia universal, programación, etc.), indícale de forma educada que tu rol se limita exclusivamente a asesorar sobre la normativa de becas e incentivos de la UNL y que no puedes responder consultas de otros ámbitos.
@@ -25,9 +26,10 @@ CONTRATO DE RESPUESTA (ESTRICTO):
    - Si la consulta pregunta por enlaces URL de descarga o requisitos técnicos (como el enlace del Ministerio de Trabajo https://calculadoras.trabajo.gob.ec/dependencia, el enlace de la plataforma del IESS o el peso de 2 MB para PDFs), es obligatorio que los cites textualmente.
 5. No uses la palabra "contexto" o "normativa cargada" para iniciar o explicar tu respuesta. Responde directamente.
 6. Al final de tu respuesta, añade una línea en blanco seguida de una única línea especial que liste las fuentes exactas que utilizaste para responder, delimitadas por corchetes angulares y separadas por comas. Sigue estrictamente este formato:
-   - Si usaste información de la Guía, incluye: <Guia_MGT_MD>
-   - Si usaste información de una página del Reglamento PDF, incluye: <Reglamento_PDF_Pag_X> (donde X es el número de página física que aparece en el texto del fragmento, por ejemplo: <Reglamento_PDF_Pag_10>).
-   - Pon todos los que correspondan en una sola línea. Ejemplo: [FUENTES_USADAS: <Guia_MGT_MD>, <Reglamento_PDF_Pag_10>]
+    - Si usaste información de la Guía de Becas MD, incluye: <Guia_MGT_MD>
+    - Si usaste información de la Tabla de Requisitos MD, incluye: <Requisitos_Tramite_MD>
+    - Si usaste información de una página del Reglamento PDF, incluye: <Reglamento_PDF_Pag_X> (donde X es el número de página física que aparece en el texto del fragmento, por ejemplo: <Reglamento_PDF_Pag_10>).
+    - Pon todos los que correspondan en una sola línea. Ejemplo: [FUENTES_USADAS: <Guia_MGT_MD>, <Requisitos_Tramite_MD>, <Reglamento_PDF_Pag_10>]
    - Si no respondes la pregunta, saludas, agradeces o es fuera de ámbito, pon exactamente: [FUENTES_USADAS: Ninguna]
 
 {chat_history}Contexto:
@@ -54,11 +56,28 @@ def llamar_nvidia_api(prompt_text: str, model_name: str, api_key: str, max_token
         "Authorization": f"Bearer {api_key}",
         "Content-Type": "application/json"
     }
+    # Separar en system y user messages para evitar simulaciones de diálogo por parte del modelo
+    parts = prompt_text.split("Contexto:")
+    if len(parts) >= 2:
+        system_content = parts[0].strip()
+        user_content = "Contexto:" + "Contexto:".join(parts[1:]).replace("Respuesta del asistente:", "").strip()
+        messages = [
+            {"role": "system", "content": system_content},
+            {"role": "user", "content": user_content}
+        ]
+    else:
+        messages = [
+            {"role": "user", "content": prompt_text}
+        ]
+
+    print(f"-> Nvidia API Payload - Messages count: {len(messages)}")
+    for idx_msg, msg in enumerate(messages):
+        snippet_msg = msg['content'][:120].replace('\n', ' ').strip()
+        print(f"   [{idx_msg}] Role: {msg['role']} | Content length: {len(msg['content'])} | Snippet: {snippet_msg}...")
+
     data = {
         "model": model_name,
-        "messages": [
-            {"role": "user", "content": prompt_text}
-        ],
+        "messages": messages,
         "temperature": 0.0,
         "max_tokens": max_tokens
     }
@@ -148,6 +167,11 @@ def procesar_respuesta_y_filtrar_fuentes(respuesta_cruda: str, fuentes_contexto:
                 if f["source"] == "Guia_MGT_MD":
                     if f not in fuentes_filtradas:
                         fuentes_filtradas.append(f)
+        elif tag == "Requisitos_Tramite_MD":
+            for f in fuentes_contexto:
+                if f["source"] == "Requisitos_Tramite_MD":
+                    if f not in fuentes_filtradas:
+                        fuentes_filtradas.append(f)
         elif tag.startswith("Reglamento_PDF_Pag_"):
             try:
                 num_pag_fisica = int(tag.replace("Reglamento_PDF_Pag_", ""))
@@ -199,7 +223,8 @@ def ejecutar_consulta(query: str, retriever, nvidia_key: str, groq_key: str, his
             "excelencia", "académica", "iess", "afiliado", "afiliacion", "afiliación", 
             "certificado", "trabajo", "rol", "pagos", "peso", "límite", "archivo",
             "artístico", "cultural", "deportivo", "deportivos",
-            "asistencia", "clases", "faltar", "falta", "falté", "pérdida", "perder", "pierdo", "mantener", "mantenimiento"
+            "asistencia", "clases", "faltar", "falta", "falté", "pérdida", "perder", "pierdo", "mantener", "mantenimiento",
+            "requisito", "requisitos", "gratuidad", "matrícula", "matricula", "segunda", "fase"
         }
         hay_criticas = any(k in keywords_query for k in keywords_criticas)
         
@@ -221,6 +246,10 @@ def ejecutar_consulta(query: str, retriever, nvidia_key: str, groq_key: str, his
                 # Caso D: Asistencia, Mantenimiento y Pérdida (Art. 23 y 38)
                 elif any(x in keywords_query for x in ["asistencia", "clases", "faltar", "falta", "falté", "pérdida", "perder", "pierdo", "mantener", "mantenimiento"]):
                     if "art. 23" in content_lower or "art. 38" in content_lower or "asistencia" in content_lower or "mantenimiento" in content_lower:
+                        coincide = True
+                # Caso E: Requisitos de trámite, gratuidad, segunda matrícula
+                elif any(x in keywords_query for x in ["requisito", "requisitos", "gratuidad", "matrícula", "matricula", "segunda", "fase"]):
+                    if "requisitos necesarios" in content_lower or "segunda matrícula" in content_lower or "gratuidad" in content_lower or "fase 1" in content_lower:
                         coincide = True
                     
                 if coincide:

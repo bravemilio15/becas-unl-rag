@@ -3,7 +3,7 @@ import sys
 from langchain_text_splitters import MarkdownHeaderTextSplitter, RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader
 
-def procesar_markdown(path: str) -> list:
+def procesar_markdown(path: str, source: str = "Guia_MGT_MD") -> list:
     """
     Carga el archivo Markdown, lo segmenta jerárquicamente por encabezados (#, ##, ###)
     y luego subdivide de forma recursiva por caracteres para evitar bloques masivos.
@@ -36,7 +36,7 @@ def procesar_markdown(path: str) -> list:
     # Inyección de metadatos requeridos
     file_name = os.path.basename(path)
     for chunk in chunks_finales:
-        chunk.metadata["source"] = "Guia_MGT_MD"
+        chunk.metadata["source"] = source
         chunk.metadata["file_name"] = file_name
         
     return chunks_finales

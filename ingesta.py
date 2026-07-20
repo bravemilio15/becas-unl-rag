@@ -16,10 +16,8 @@ load_dotenv()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
 PATH_MD = os.path.join(DATA_DIR, "base_conocimiento_becas_unl.md")
-PATH_PDF = os.path.join(DATA_DIR, "data", "REGLAMENTO_DE_BECAS_DEFINITIVO.pdf")  # Apunta a la carpeta data
-# Normalizar rutas absolutas
-PATH_MD = os.path.join(DATA_DIR, "base_conocimiento_becas_unl.md")
 PATH_PDF = os.path.join(DATA_DIR, "REGLAMENTO_DE_BECAS_DEFINITIVO.pdf")
+PATH_REQUISITOS = os.path.join(DATA_DIR, "requisitos_tramite_becas.md")
 CHROMA_DIR = os.path.join(BASE_DIR, "chroma_db")
 REGISTRY_PATH = os.path.join(DATA_DIR, "indexed_files.json")
 
@@ -32,7 +30,8 @@ def main():
     # Definición de documentos a auditar y procesar
     archivos_a_procesar = [
         {"path": PATH_MD, "tipo": "md", "source": "Guia_MGT_MD"},
-        {"path": PATH_PDF, "tipo": "pdf", "source": "Reglamento_PDF"}
+        {"path": PATH_PDF, "tipo": "pdf", "source": "Reglamento_PDF"},
+        {"path": PATH_REQUISITOS, "tipo": "md", "source": "Requisitos_Tramite_MD"}
     ]
     
     # Intentar cargar base de datos existente
@@ -72,7 +71,7 @@ def main():
         
         # Fragmentado y segmentación
         if tipo == "md":
-            chunks = procesar_markdown(path)
+            chunks = procesar_markdown(path, source)
         else:
             chunks = procesar_pdf(path)
             
